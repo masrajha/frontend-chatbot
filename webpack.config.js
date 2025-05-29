@@ -1,11 +1,14 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'build'),
+    filename: 'static/js/[name].[contenthash:8].js',
+    publicPath: '/',
+    clean: true,
   },
   module: {
     rules: [
@@ -21,26 +24,36 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg|ico)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/media/[name].[hash][ext]'
+        }
       }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './public/index.html'
+      template: './public/index.html',
+      favicon: './public/favicon.ico',
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'static/css/[name].[contenthash:8].css'
     })
   ],
-  devServer: {
-    static: {
-      directory: path.join(__dirname, 'dist'),
-    },
-    allowedHosts: "all",
-    compress: true,
-    port: 3000,
-    hot: true,
-    open: true
-  },
   resolve: {
     extensions: ['.js', '.jsx']
-  }
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+    runtimeChunk: 'single',
+  },
 };
