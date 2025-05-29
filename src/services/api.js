@@ -1,12 +1,11 @@
 export const searchAcademicData = async (query) => {
   try {
-    // const API_URL = process.env.REACT_APP_API_URL || 'http://192.168.100.130:5000/search';
-    const response = await fetch('https://a0c8-125-165-192-155.ngrok-free.app/search', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ text: query })
+    const API_URL = "https://a0c8-125-165-192-155.ngrok-free.app/search";
+
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: query }),
     });
 
     if (!response.ok) {
